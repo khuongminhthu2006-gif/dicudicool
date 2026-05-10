@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thoát Bẫy</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="screen home-screen is-active" id="homeScreen" aria-label="Màn hình chính">
+      <div class="color-frame home-frame">
+        <span class="corner-tile tile-blue top-left">★</span>
+        <span class="corner-tile tile-red mid-left">?</span>
+        <span class="corner-tile tile-green bottom-left">↗</span>
+        <span class="corner-tile tile-red top-right">♥</span>
+        <span class="corner-tile tile-blue mid-right">✦</span>
+        <span class="corner-tile tile-pink bottom-right">♡</span>
+
+        <div class="home-card">
+          <div class="character char-rut-re home-blue" aria-label="Rụt rè"><span></span><b>RỤT RÈ</b></div>
+          <div class="character char-cau-kinh home-red" aria-label="Cầu Kình"><span></span><b>CẦU KÌNH</b></div>
+          <div class="character char-bom home-green" aria-label="Bờm"><span></span><b>BỜM</b></div>
+          <div class="character char-biet-tuot home-orange" aria-label="Biết Tuốt"><span></span><b>BIẾT TUỐT</b></div>
+
+          <h1 class="logo logo-home">
+            <span>THOÁT</span>
+            <strong>BẪY</strong>
+          </h1>
+
+          <button class="start-button" id="startBtn" type="button">
+            <span>▶</span>
+            BẮT ĐẦU
+          </button>
+
+          <nav class="home-menu" aria-label="Menu chính">
+            <button type="button" data-screen="game">
+              <span class="menu-icon blue">▮▮▮</span>
+              TỔNG QUAN
+            </button>
+            <button type="button" data-screen="study">
+              <span class="menu-icon green">▯</span>
+              ÔN TẬP
+            </button>
+            <button type="button" id="homeHistoryBtn">
+              <span class="menu-icon purple">↶</span>
+              LỊCH SỬ
+            </button>
+            <button type="button" id="homeSettingsBtn">
+              <span class="menu-icon dark">⚙</span>
+              CÀI ĐẶT
+            </button>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen game-screen" id="gameScreen" aria-label="Màn hình câu hỏi tự luận">
+      <div class="color-frame game-frame">
+        <div class="player-pill">
+          <span class="user-icon">●</span>
+          <div>
+            <strong id="currentPlayerName">PLAYER 1</strong>
+            <span id="currentPlayerScore">1.250 🟡</span>
+          </div>
+        </div>
+
+        <div class="timer-card">
+          <div class="timer-row">
+            <span>◷</span>
+            <strong id="timerText">00:30</strong>
+          </div>
+          <div class="timer-track">
+            <span id="timerBar"></span>
+          </div>
+        </div>
+
+        <aside class="scoreboard">
+          <h2>BẢNG ĐIỂM</h2>
+          <div id="playerList" class="player-list"></div>
+        </aside>
+
+        <section class="game-center">
+          <h1 class="logo logo-game">
+            <span>THOÁT</span>
+            <strong>BẪY</strong>
+          </h1>
+          <p class="game-subtitle">CÂU HỎI <b>•</b> TỰ LUẬN <b>•</b> CHẤM ĐIỂM</p>
+
+          <div class="ai-area">
+            <div class="character char-rut-re game-character" aria-label="Rụt rè"><span></span><b>RỤT RÈ</b></div>
+            <article class="question-card">
+              <strong id="tileType">Sẵn sàng!</strong>
+              <p id="aiMessage">Chọn loại ô rồi bấm BẮT ĐẦU để hiện câu hỏi tự luận.</p>
+            </article>
+          </div>
+
+          <article class="voice-card">
+            <button class="mic-button" id="activateTileBtn" type="button">▶</button>
+            <div>
+              <strong id="mainText">BẮT ĐẦU</strong>
+              <span id="turnStatus">Người chơi nhập câu trả lời vào ô tự luận bên dưới.</span>
+            </div>
+          </article>
+
+          <section class="tile-form" aria-label="Kích hoạt ô">
+            <label>
+              Ô
+              <input id="tileInput" type="number" min="1" max="40" placeholder="12" />
+            </label>
+            <select id="tileKind" aria-label="Loại ô">
+              <option value="question">Ô câu hỏi</option>
+              <option value="trap">Ô bẫy</option>
+              <option value="reward">Ô thưởng</option>
+            </select>
+          </section>
+
+          <section class="answer-panel" id="answerPanel" aria-label="Trả lời">
+            <textarea id="answerInput" placeholder="Nhập câu trả lời tự luận tại đây..." autocomplete="off"></textarea>
+            <button id="submitAnswerBtn" type="button">NỘP ĐÁP ÁN</button>
+          </section>
+
+          <section class="choice-panel" id="rewardPanel" aria-label="Chọn thưởng">
+            <button id="safeRewardBtn" type="button">NHẬN +80</button>
+            <button id="challengeRewardBtn" type="button">THỬ THÁCH</button>
+          </section>
+        </section>
+
+        <aside class="status-card">
+          <h2>TÌNH TRẠNG</h2>
+          <span>✍ Câu trả lời tự luận</span>
+          <span>✓ Chờ chấm đáp án</span>
+          <span id="resultBanner">⏱ Còn 00:30 giây</span>
+          <small id="questionProgress">Câu hỏi: 0 / 0</small>
+          <small id="usedQuestionCount">Đã dùng: 0</small>
+        </aside>
+
+        <footer class="game-controls">
+          <button id="soundBtn" type="button">⚙ CÀI ĐẶT</button>
+          <button id="skipQuestionBtn" type="button">⏭ BỎ QUA CÂU HỎI</button>
+          <button id="historyBtn" type="button">▦ LỊCH SỬ CÂU HỎI</button>
+          <button class="end-turn" id="nextTurnBtn" type="button">⚑ KẾT THÚC LƯỢT</button>
+        </footer>
+
+        <button class="back-home" type="button" data-screen="home">←</button>
+      </div>
+    </section>
+
+    <section class="screen study-screen" id="studyScreen" aria-label="Ôn tập kiến thức">
+      <div class="color-frame study-frame">
+        <button class="back-button" type="button" data-screen="home">←</button>
+        <h1 class="logo logo-study"><span>THOÁT BẪY</span></h1>
+
+        <div class="coin-pill">🟡 <strong id="studyScore">1.250</strong></div>
+        <div class="cloud">☁</div>
+
+        <header class="study-heading">
+          <h2>ÔN TẬP KIẾN THỨC</h2>
+          <p>Học vui - Nhớ lâu - Thoát bẫy dễ dàng!</p>
+        </header>
+
+        <article class="flash-card" id="flashCard">
+          <span id="studyCount">1 / 5</span>
+          <h2 id="studyQuestion">Khi bạn thấy người khác bị bắt nạt, bạn nên làm gì?</h2>
+          <p id="studyAnswer"></p>
+        </article>
+
+        <aside class="progress-card">
+          <h2>TIẾN ĐỘ HỌC</h2>
+          <div class="progress-ring"><strong id="studyPercent">20%</strong><span>Hoàn thành</span></div>
+          <p>Đã học <b id="learnedCount">1</b> thẻ</p>
+          <p>Còn lại <b id="leftCount">4</b> thẻ</p>
+        </aside>
+
+        <div class="study-hint">Nhấn để xem đáp án ☝</div>
+        <button class="study-nav prev" id="prevCardBtn" type="button">← Thẻ trước</button>
+        <button class="study-nav answer" id="showAnswerBtn" type="button">Xem đáp án</button>
+        <button class="study-nav next" id="nextCardBtn" type="button">Thẻ sau →</button>
+
+        <div class="character char-rut-re study-blue" aria-label="Rụt rè"><span></span><b>RỤT RÈ</b></div>
+        <div class="character char-biet-tuot study-orange" aria-label="Biết Tuốt"><span></span><b>BIẾT TUỐT</b></div>
+      </div>
+    </section>
+
+    <dialog id="historyDialog" class="history-dialog">
+      <button id="closeHistoryBtn" class="close-button" type="button">×</button>
+      <h2>Lịch sử lượt chơi</h2>
+      <ol id="historyList"></ol>
+    </dialog>
+  </main>
+
+  <script src="./questions.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
+
