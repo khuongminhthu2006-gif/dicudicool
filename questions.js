@@ -141,4 +141,5 @@
   }
 ];
 
+export default QUESTION_BANK;
 
