@@ -36,7 +36,7 @@ app.get('/api/questions/:id', (req, res) => {
   const question = questionBank.find((item) => item.id === Number(req.params.id));
 
   if (!question) {
-    res.status(404).json({ error: 'Question not found.' });
+    res.status(404).json({ error: 'Không tìm thấy câu hỏi.' });
     return;
   }
 
@@ -52,7 +52,7 @@ app.post('/api/evaluate-answer', upload.single('audio'), async (req, res) => {
     console.log('[AI] Received answer evaluation request.');
 
     if (!process.env.OPENAI_API_KEY) {
-      res.status(500).json({ error: 'Missing OPENAI_API_KEY in .env.' });
+      res.status(500).json({ error: 'Thiếu OPENAI_API_KEY trong .env.' });
       return;
     }
 
@@ -63,12 +63,12 @@ app.post('/api/evaluate-answer', upload.single('audio'), async (req, res) => {
     const question = questionBank.find((item) => item.id === Number(req.body.questionId));
 
     if (!question) {
-      res.status(404).json({ error: 'Question not found.' });
+      res.status(404).json({ error: 'Không tìm thấy câu hỏi.' });
       return;
     }
 
     if (!req.file) {
-      res.status(400).json({ error: 'Audio recording is required.' });
+      res.status(400).json({ error: 'Cần có bản ghi âm.' });
       return;
     }
 
@@ -135,7 +135,7 @@ app.post('/api/evaluate-answer', upload.single('audio'), async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to evaluate answer.' });
+    res.status(500).json({ error: 'Không chấm được câu trả lời.' });
   }
 });
 

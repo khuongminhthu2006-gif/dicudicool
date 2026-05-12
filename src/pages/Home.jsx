@@ -12,8 +12,8 @@ function Home({ hasActiveGame, onStartNewGame }) {
     <main className="home-page">
       <section className="home-panel">
         <div className="home-copy">
-          <p className="eyebrow">Board Game Companion</p>
-          <h1>Thoat Bay</h1>
+          <p className="eyebrow">Trợ lý trò chơi</p>
+          <h1>Thoát Bẫy</h1>
         </div>
 
         <div className="home-actions">
@@ -32,7 +32,7 @@ function Home({ hasActiveGame, onStartNewGame }) {
           )}
         </div>
 
-        <section className="home-menu" aria-label="Game sections">
+        <section className="home-menu" aria-label="Các mục trò chơi">
           <button type="button" onClick={() => navigate('/summary')}>
             <span className="menu-icon bars" aria-hidden="true" />
             Tổng quan
@@ -53,6 +53,6 @@ function Home({ hasActiveGame, onStartNewGame }) {
       </section>
     </main>
   );
-};
+}
 
 export default Home;

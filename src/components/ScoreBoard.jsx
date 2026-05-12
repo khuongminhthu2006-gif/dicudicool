@@ -2,7 +2,7 @@ function ScoreBoard({ activePlayerId, players }) {
   const avatars = ['M', 'G', 'O', 'A', 'B', 'C'];
 
   return (
-    <aside className="scoreboard" aria-label="Scoreboard">
+    <aside className="scoreboard" aria-label="Bảng điểm">
       <h2>Bảng điểm</h2>
       <div className="scoreboard-list">
         {players.map((player, index) => (
@@ -19,6 +19,6 @@ function ScoreBoard({ activePlayerId, players }) {
       </div>
     </aside>
   );
-};
+}
 
 export default ScoreBoard;

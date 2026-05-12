@@ -63,7 +63,7 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
 
         setAudioBlob(recording);
         stream.getTracks().forEach((track) => track.stop());
-        setEvaluationStage('Recording saved. Replay it, then submit when ready.');
+        setEvaluationStage('Đã lưu bản ghi. Nghe lại rồi gửi khi sẵn sàng.');
       });
 
       mediaRecorder.start();
@@ -72,7 +72,7 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
         setRecordingSeconds((currentSeconds) => currentSeconds + 1);
       }, 1000);
     } catch {
-      setError('Microphone access failed. Allow microphone permission and try again.');
+      setError('Không truy cập được micro. Hãy cấp quyền micro rồi thử lại.');
     }
   };
 
@@ -93,18 +93,18 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
 
   const evaluateAnswer = async (recording = audioBlob) => {
     if (!questionId.trim()) {
-      setError('Enter the pulled question ID first.');
+      setError('Hãy nhập mã câu hỏi đã rút trước.');
       return;
     }
 
     if (!recording) {
-      setError('Record an answer before evaluating.');
+      setError('Hãy ghi âm câu trả lời trước khi chấm.');
       return;
     }
 
     setError('');
     setIsEvaluating(true);
-    setEvaluationStage('Sending recording to the AI server...');
+    setEvaluationStage('Đang gửi bản ghi đến máy chủ AI...');
 
     try {
       const formData = new FormData();
@@ -115,15 +115,15 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
         method: 'POST',
         body: formData,
       });
-      setEvaluationStage('Waiting for OpenAI transcription and answer judging...');
+      setEvaluationStage('Đang chờ AI chuyển giọng nói thành văn bản và chấm câu trả lời...');
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to evaluate answer.');
+        throw new Error(data.error || 'Không chấm được câu trả lời.');
       }
 
       setEvaluation(data);
-      setEvaluationStage('AI evaluation complete.');
+      setEvaluationStage('AI đã chấm xong.');
     } catch (requestError) {
       setError(requestError.message);
       setEvaluationStage('');
@@ -157,28 +157,33 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
     navigate('/dice');
   };
 
+  const verdictLabels = {
+    correct: 'Đúng',
+    incorrect: 'Sai',
+    not_applicable: 'Không hợp lệ',
+  };
+
   return (
     <main className="question-page">
       <section className="question-panel">
-        <p className="eyebrow">Question</p>
-        <h1>{activePlayer.name}&apos;s answer</h1>
+        <p className="eyebrow">Câu hỏi</p>
+        <h1>Câu trả lời của {activePlayer.name}</h1>
         {pendingChallenge && (
           <p className="challenge-penalty">
-            Challenge penalty: <strong>{pendingChallenge.points}</strong> point
-            {Math.abs(pendingChallenge.points) === 1 ? '' : 's'}.
-            Wrong answer applies <strong>{pendingChallenge.points * 2}</strong> points.
+            Điểm phạt thử thách: <strong>{pendingChallenge.points}</strong> điểm.
+            Trả lời sai sẽ bị <strong>{pendingChallenge.points * 2}</strong> điểm.
           </p>
         )}
 
         <div className="answer-workflow">
-          <label htmlFor="question-id">Pulled question ID</label>
+          <label htmlFor="question-id">Mã câu hỏi đã rút</label>
           <input
             id="question-id"
             min="1"
             type="number"
             value={questionId}
             onChange={(event) => setQuestionId(event.target.value)}
-            placeholder="Example: 7"
+            placeholder="Ví dụ: 7"
           />
 
           <div className="recording-control">
@@ -188,7 +193,7 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
               disabled={isEvaluating}
               onClick={toggleRecording}
             >
-              {isRecording ? 'Stop Recording' : 'Record Answer'}
+              {isRecording ? 'Dừng ghi âm' : 'Ghi câu trả lời'}
             </button>
             <span className={isRecording ? 'recording-timer active' : 'recording-timer'}>
               {formatRecordingTime(recordingSeconds)}
@@ -196,17 +201,17 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
           </div>
 
           <p className="ai-status" aria-live="polite">
-            {evaluationStage || 'Record an answer, replay it, then submit for AI evaluation.'}
+            {evaluationStage || 'Ghi câu trả lời, nghe lại, rồi gửi để AI chấm.'}
           </p>
 
           <div className={audioUrl ? 'recording-playback' : 'recording-playback empty'}>
-            <span>Recorded answer</span>
+            <span>Bản ghi</span>
             {audioUrl ? (
               <audio controls src={audioUrl}>
                 <track kind="captions" />
               </audio>
             ) : (
-              <div className="empty-recording">No recording yet</div>
+              <div className="empty-recording">Chưa có bản ghi</div>
             )}
           </div>
 
@@ -216,7 +221,7 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
             disabled={isRecording || isEvaluating || !audioBlob}
             onClick={() => evaluateAnswer()}
           >
-            {isEvaluating ? 'Submitting...' : 'Submit Answer'}
+            {isEvaluating ? 'Đang gửi...' : 'Gửi câu trả lời'}
           </button>
         </div>
 
@@ -224,9 +229,9 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
 
         {evaluation && (
           <section className="ai-result" aria-live="polite">
-            <h2>{evaluation.verdict.result.replace('_', ' ')}</h2>
+            <h2>{verdictLabels[evaluation.verdict.result] ?? evaluation.verdict.result}</h2>
             <button className="primary-button" type="button" onClick={applyAiResult}>
-              Apply AI Result
+              Áp dụng kết quả
             </button>
           </section>
         )}

@@ -11,8 +11,8 @@ const MAX_PLAYERS = 4;
 
 const createPlayer = (id) => ({
   id,
-  name: `Player ${id}`,
-  character: `Character ${id}`,
+  name: `Người chơi ${id}`,
+  character: `Nhân vật ${id}`,
   score: 0,
 });
 
@@ -20,6 +20,12 @@ const createDefaultPlayers = () => [
   createPlayer(1),
   createPlayer(2),
 ];
+
+const normalizePlayer = (player) => ({
+  ...player,
+  character: player.character?.replace('Character', 'Nhân vật') ?? `Nhân vật ${player.id}`,
+  name: player.name?.replace('Player', 'Người chơi') ?? `Người chơi ${player.id}`,
+});
 
 const loadGameState = () => {
   const savedState = localStorage.getItem(STORAGE_KEY);
@@ -35,7 +41,7 @@ const loadGameState = () => {
 
   try {
     const parsedState = JSON.parse(savedState);
-    const players = parsedState.players?.slice(0, MAX_PLAYERS) ?? createDefaultPlayers();
+    const players = parsedState.players?.slice(0, MAX_PLAYERS).map(normalizePlayer) ?? createDefaultPlayers();
     const activePlayerExists = players.some((player) => player.id === parsedState.activePlayerId);
 
     return {
