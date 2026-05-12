@@ -61,7 +61,6 @@ function Dice({ activePlayer, onChallengeRequired, onNextPlayer, onUpdateScore }
     <main className="dice-page">
       <section className="dice-panel">
         <div className="dice-header">
-          <p className="eyebrow">Game Dice</p>
           <h1>Roll the dice</h1>
           <p className="active-player-label">{activePlayer.name}&apos;s turn</p>
         </div>

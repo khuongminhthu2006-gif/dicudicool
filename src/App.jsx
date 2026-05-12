@@ -7,6 +7,7 @@ import Lobby from './pages/Lobby';
 import Question from './pages/Question';
 
 const STORAGE_KEY = 'thoatbay-game-state';
+const MAX_PLAYERS = 4;
 
 const createPlayer = (id) => ({
   id,
@@ -34,10 +35,14 @@ const loadGameState = () => {
 
   try {
     const parsedState = JSON.parse(savedState);
+    const players = parsedState.players?.slice(0, MAX_PLAYERS) ?? createDefaultPlayers();
+    const activePlayerExists = players.some((player) => player.id === parsedState.activePlayerId);
 
     return {
       ...parsedState,
+      activePlayerId: activePlayerExists ? parsedState.activePlayerId : players[0].id,
       isGameActive: parsedState.isGameActive ?? false,
+      players,
     };
   } catch {
     return {
@@ -79,7 +84,7 @@ function App() {
 
   const addPlayer = () => {
     setGameState((currentState) => {
-      if (currentState.players.length >= 6) {
+      if (currentState.players.length >= MAX_PLAYERS) {
         return currentState;
       }
 

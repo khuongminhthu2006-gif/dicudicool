@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
-const playerSlots = [1, 2, 3, 4, 5, 6];
+const maxPlayers = 4;
+const playerSlots = [1, 2, 3, 4];
 
 function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
   const navigate = useNavigate();
@@ -32,11 +33,11 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
           >
             -
           </button>
-          <span>{players.length} / 6</span>
+          <span>{players.length} / {maxPlayers}</span>
           <button
             className="secondary-button compact"
             type="button"
-            disabled={players.length >= 6}
+            disabled={players.length >= maxPlayers}
             onClick={onAddPlayer}
           >
             +
@@ -75,8 +76,6 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
                   <option value="Character 2">Character 2</option>
                   <option value="Character 3">Character 3</option>
                   <option value="Character 4">Character 4</option>
-                  <option value="Character 5">Character 5</option>
-                  <option value="Character 6">Character 6</option>
                 </select>
               </div>
             );
