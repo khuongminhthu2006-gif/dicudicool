@@ -21,10 +21,10 @@ function GameLayout({ activePlayerId, children, onEndGame, players }) {
         />
         <div className="sidebar-actions">
           <button className="secondary-button" type="button" onClick={() => navigate('/')}>
-            Home
+            Trang chủ
           </button>
           <button className="danger-button" type="button" onClick={() => setIsEndGameOpen(true)}>
-            End Game
+            Kết thúc
           </button>
         </div>
       </div>
@@ -38,10 +38,10 @@ function GameLayout({ activePlayerId, children, onEndGame, players }) {
             className="confirm-modal"
             role="dialog"
           >
-            <p className="eyebrow">End Game</p>
-            <h2 id="end-game-title">Reset this game?</h2>
+            <p className="eyebrow">Kết thúc</p>
+            <h2 id="end-game-title">Đặt lại ván chơi?</h2>
             <p>
-              This will clear all player scores and return to the home screen.
+              Thao tác này sẽ xóa toàn bộ điểm và quay về trang chủ.
             </p>
             <div className="modal-actions">
               <button
@@ -49,10 +49,10 @@ function GameLayout({ activePlayerId, children, onEndGame, players }) {
                 type="button"
                 onClick={() => setIsEndGameOpen(false)}
               >
-                Cancel
+                Hủy
               </button>
               <button className="danger-button" type="button" onClick={confirmEndGame}>
-                End Game
+                Kết thúc
               </button>
             </div>
           </section>

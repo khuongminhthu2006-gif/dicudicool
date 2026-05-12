@@ -12,37 +12,47 @@ function Home({ hasActiveGame, onStartNewGame }) {
     <main className="home-page">
       <section className="home-panel">
         <div className="home-copy">
-          <p className="eyebrow">Board Game Companion</p>
-          <h1>Thoatbay</h1>
-          <p>
-            Set up players, track scores, roll the dice, and move through game
-            rounds from one shared screen.
-          </p>
+          <p className="eyebrow">Trợ lý trò chơi</p>
+          <h1>Thoát Bẫy</h1>
         </div>
 
         <div className="home-actions">
           <button className="primary-button" type="button" onClick={handleStartGame}>
-            Start Game
+            <span className="play-icon" aria-hidden="true" />
+            Bắt đầu
           </button>
           {hasActiveGame ? (
             <button className="secondary-button" type="button" onClick={() => navigate('/dice')}>
-              Continue Game
+              Tiếp tục
             </button>
           ) : (
             <button className="secondary-button vague" type="button" disabled>
-              No Active Game
+              Chưa có lượt
             </button>
           )}
         </div>
 
-        <section className="home-menu" aria-label="Game sections">
-          <button type="button" onClick={() => navigate('/summary')}>Summary</button>
-          <button type="button" onClick={() => navigate('/history')}>History</button>
-          <button type="button" onClick={() => navigate('/settings')}>Settings</button>
+        <section className="home-menu" aria-label="Các mục trò chơi">
+          <button type="button" onClick={() => navigate('/summary')}>
+            <span className="menu-icon bars" aria-hidden="true" />
+            Tổng quan
+          </button>
+          <button type="button" onClick={() => navigate('/practice')}>
+            <span className="menu-icon book" aria-hidden="true" />
+            Ôn tập
+          </button>
+          <button type="button" onClick={() => navigate('/history')}>
+            <span className="menu-icon clock" aria-hidden="true" />
+            Lịch sử
+          </button>
+          <button type="button" onClick={() => navigate('/settings')}>
+            <span className="menu-icon gear" aria-hidden="true" />
+            Cài đặt
+          </button>
         </section>
       </section>
     </main>
   );
-};
+}
 
 export default Home;

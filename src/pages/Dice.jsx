@@ -11,14 +11,14 @@ const pipPositions = {
 };
 
 const diceOptions = [
-  { label: '+1 point', points: 1 },
-  { label: '+2 points', points: 2 },
-  { label: '+3 points', points: 3 },
-  { label: '-1 point and draw a challenge card', points: -1, requiresChallenge: true },
-  { label: '-2 points and draw a challenge card', points: -2, requiresChallenge: true },
-  { label: '-3 points and draw a challenge card', points: -3, requiresChallenge: true },
-  { label: 'Draw a challenge or an opportunity card', points: 0 },
-  { label: 'Lose turn', points: 0 },
+  { label: '+1 điểm', points: 1 },
+  { label: '+2 điểm', points: 2 },
+  { label: '+3 điểm', points: 3 },
+  { label: '-1 điểm và rút thẻ thử thách', points: -1, requiresChallenge: true },
+  { label: '-2 điểm và rút thẻ thử thách', points: -2, requiresChallenge: true },
+  { label: '-3 điểm và rút thẻ thử thách', points: -3, requiresChallenge: true },
+  { label: 'Rút thẻ thử thách hoặc cơ hội', points: 0 },
+  { label: 'Mất lượt', points: 0 },
 ];
 
 function Dice({ activePlayer, onChallengeRequired, onNextPlayer, onUpdateScore }) {
@@ -61,29 +61,28 @@ function Dice({ activePlayer, onChallengeRequired, onNextPlayer, onUpdateScore }
     <main className="dice-page">
       <section className="dice-panel">
         <div className="dice-header">
-          <p className="eyebrow">Game Dice</p>
-          <h1>Roll the dice</h1>
-          <p className="active-player-label">{activePlayer.name}&apos;s turn</p>
+          <h1>Lắc xúc xắc</h1>
+          <p className="active-player-label">Lượt của {activePlayer.name}</p>
         </div>
 
         <div className="dice-result" aria-live="polite">
-          <div className="die" aria-label={hasRolled ? `Dice result is ${result}` : 'Dice is not rolled yet'}>
+          <div className="die" aria-label={hasRolled ? `Kết quả xúc xắc là ${result}` : 'Chưa lắc xúc xắc'}>
             {hasRolled && pipPositions[result].map((position) => (
               <span className={`pip ${position}`} key={position} />
             ))}
           </div>
           <div>
-            <span className="result-label">Result</span>
+            <span className="result-label">Kết quả</span>
             <strong>{hasRolled ? result : '-'}</strong>
           </div>
         </div>
 
         <button className="primary-button" type="button" onClick={rollDice}>
-          Roll
+          Lắc
         </button>
 
-        <section className="dice-options" aria-label="Dice result options">
-          <h2>Result Box</h2>
+        <section className="dice-options" aria-label="Các ô kết quả xúc xắc">
+          <h2>Ô kết quả</h2>
           <div className="option-grid">
             {diceOptions.map((option) => (
               <button
@@ -106,7 +105,7 @@ function Dice({ activePlayer, onChallengeRequired, onNextPlayer, onUpdateScore }
           disabled={!canGoNext}
           onClick={resetTurnAndGoNext}
         >
-          Next player
+          Người chơi tiếp theo
         </button>
       </section>
     </main>

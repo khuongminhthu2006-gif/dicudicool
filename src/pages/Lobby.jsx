@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
-const playerSlots = [1, 2, 3, 4, 5, 6];
+const maxPlayers = 4;
+const playerSlots = [1, 2, 3, 4];
 
 function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
   const navigate = useNavigate();
@@ -14,16 +15,16 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
       <section className="lobby-panel">
         <div className="lobby-header">
           <div>
-            <p className="eyebrow">Lobby</p>
-            <h1>Set up players</h1>
-            <p className="player-count">{players.length} players</p>
+            <p className="eyebrow">Phòng chờ</p>
+            <h1>Thiết lập người chơi</h1>
+            <p className="player-count">{players.length} người chơi</p>
           </div>
           <button className="secondary-button compact" type="button" onClick={() => navigate('/')}>
-            Home
+            Trang chủ
           </button>
         </div>
 
-        <div className="player-count-controls" aria-label="Player count controls">
+        <div className="player-count-controls" aria-label="Điều chỉnh số người chơi">
           <button
             className="secondary-button compact"
             type="button"
@@ -32,11 +33,11 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
           >
             -
           </button>
-          <span>{players.length} / 6</span>
+          <span>{players.length} / {maxPlayers}</span>
           <button
             className="secondary-button compact"
             type="button"
-            disabled={players.length >= 6}
+            disabled={players.length >= maxPlayers}
             onClick={onAddPlayer}
           >
             +
@@ -50,33 +51,31 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
             if (!player) {
               return (
                 <div className="player-setup empty" key={slot}>
-                  <h2>Player {slot}</h2>
-                  <p>Available slot</p>
+                  <h2>Người chơi {slot}</h2>
+                  <p>Ô trống</p>
                 </div>
               );
             }
 
             return (
               <div className="player-setup" key={player.id}>
-                <h2>Player {player.id}</h2>
+                <h2>Người chơi {player.id}</h2>
                 <input
                   type="text"
-                  placeholder="Enter your name"
+                  placeholder="Nhập tên"
                   value={player.name}
                   onChange={(event) => onUpdatePlayer(player.id, { name: event.target.value })}
                 />
-                <label htmlFor={`character-${player.id}`}>Choose your character:</label>
+                <label htmlFor={`character-${player.id}`}>Chọn nhân vật:</label>
                 <select
                   id={`character-${player.id}`}
                   value={player.character}
                   onChange={(event) => onUpdatePlayer(player.id, { character: event.target.value })}
                 >
-                  <option value="Character 1">Character 1</option>
-                  <option value="Character 2">Character 2</option>
-                  <option value="Character 3">Character 3</option>
-                  <option value="Character 4">Character 4</option>
-                  <option value="Character 5">Character 5</option>
-                  <option value="Character 6">Character 6</option>
+                  <option value="Nhân vật 1">Nhân vật 1</option>
+                  <option value="Nhân vật 2">Nhân vật 2</option>
+                  <option value="Nhân vật 3">Nhân vật 3</option>
+                  <option value="Nhân vật 4">Nhân vật 4</option>
                 </select>
               </div>
             );
@@ -85,7 +84,7 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
 
         <div className="lobby-actions">
           <button className="primary-button" type="button" onClick={handleStartGame}>
-            Start Game
+            Bắt đầu
           </button>
         </div>
       </section>
