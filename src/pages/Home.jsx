@@ -37,7 +37,7 @@ function Home({ hasActiveGame, onStartNewGame }) {
             <span className="menu-icon bars" aria-hidden="true" />
             Tổng quan
           </button>
-          <button type="button" onClick={() => navigate('/lobby')}>
+          <button type="button" onClick={() => navigate('/practice')}>
             <span className="menu-icon book" aria-hidden="true" />
             Ôn tập
           </button>
