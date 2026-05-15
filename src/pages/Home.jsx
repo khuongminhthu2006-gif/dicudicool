@@ -41,10 +41,6 @@ function Home({ hasActiveGame, onStartNewGame }) {
             <span className="menu-icon book" aria-hidden="true" />
             Ôn tập
           </button>
-          <button type="button" onClick={() => navigate('/history')}>
-            <span className="menu-icon clock" aria-hidden="true" />
-            Lịch sử
-          </button>
           <button type="button" onClick={() => navigate('/settings')}>
             <span className="menu-icon gear" aria-hidden="true" />
             Cài đặt

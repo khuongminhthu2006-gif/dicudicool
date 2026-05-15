@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ScoreBoard from './ScoreBoard';
 
-function GameLayout({ activePlayerId, children, onEndGame, players }) {
+function GameLayout({ activePlayerId, children, onEndGame, players, settings = {} }) {
   const [isEndGameOpen, setIsEndGameOpen] = useState(false);
   const navigate = useNavigate();
   const highestScore = Math.max(...players.map((player) => player.score));
@@ -25,6 +25,7 @@ function GameLayout({ activePlayerId, children, onEndGame, players }) {
       <div className="game-sidebar">
         <ScoreBoard
           activePlayerId={activePlayerId}
+          hideEliminatedPlayers={settings.hideEliminatedPlayers}
           players={players}
         />
         <div className="sidebar-actions">

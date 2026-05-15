@@ -7,9 +7,17 @@ import Dice from './pages/Dice';
 import Home from './pages/Home';
 import Lobby from './pages/Lobby';
 import Question from './pages/Question';
+import Settings from './pages/Settings';
+import Summary from './pages/Summary';
 
 const STORAGE_KEY = 'thoatbay-game-state';
+const SETTINGS_KEY = 'thoatbay-settings';
 const MAX_PLAYERS = 4;
+const DEFAULT_SETTINGS = {
+  compactScoreboard: false,
+  hideEliminatedPlayers: false,
+  largeText: false,
+};
 
 const createPlayer = (id, usedCharacterValues = new Set()) => ({
   id,
@@ -95,14 +103,36 @@ const loadGameState = () => {
   }
 };
 
+const loadSettings = () => {
+  const savedSettings = localStorage.getItem(SETTINGS_KEY);
+
+  if (!savedSettings) {
+    return DEFAULT_SETTINGS;
+  }
+
+  try {
+    return {
+      ...DEFAULT_SETTINGS,
+      ...JSON.parse(savedSettings),
+    };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+};
+
 function App() {
   const [gameState, setGameState] = useState(loadGameState);
+  const [settings, setSettings] = useState(loadSettings);
   const { activePlayerId, isGameActive, pendingChallenge, players } = gameState;
   const activePlayer = players.find((player) => player.id === activePlayerId) ?? players[0];
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
   }, [gameState]);
+
+  useEffect(() => {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }, [settings]);
 
   const updatePlayer = (playerId, updates) => {
     setGameState((currentState) => {
@@ -311,10 +341,32 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
+      <div
+        className={[
+          'app-shell',
+          settings.largeText ? 'large-text' : '',
+          settings.compactScoreboard ? 'compact-scoreboard' : '',
+        ].filter(Boolean).join(' ')}
+      >
+        <Routes>
         <Route
           path="/"
           element={<Home hasActiveGame={isGameActive} onStartNewGame={startNewGame} />}
+        />
+        <Route
+          path="/settings"
+          element={(
+            <Settings
+              onResetGame={endGame}
+              onResetSettings={() => setSettings(DEFAULT_SETTINGS)}
+              onUpdateSettings={setSettings}
+              settings={settings}
+            />
+          )}
+        />
+        <Route
+          path="/summary"
+          element={<Summary />}
         />
         <Route
           path="/lobby"
@@ -334,6 +386,7 @@ function App() {
               activePlayerId={activePlayerId}
               onEndGame={endGame}
               players={players}
+              settings={settings}
             >
               <Dice
                 activePlayer={activePlayer}
@@ -352,6 +405,7 @@ function App() {
               activePlayerId={activePlayerId}
               onEndGame={endGame}
               players={players}
+              settings={settings}
             >
               <CardEffect
                 activePlayer={activePlayer}
@@ -367,6 +421,7 @@ function App() {
               activePlayerId={activePlayerId}
               onEndGame={endGame}
               players={players}
+              settings={settings}
             >
               <Question
                 activePlayer={activePlayer}
@@ -378,7 +433,8 @@ function App() {
             </GameLayout>
           )}
         />
-      </Routes>
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }
