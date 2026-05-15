@@ -3,6 +3,8 @@ import express from 'express';
 import OpenAI from 'openai';
 import { createServer as createViteServer } from 'vite';
 import questionBank from './questions.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const isCombinedDevServer = process.argv.includes('--with-vite');
@@ -135,7 +137,13 @@ const startServer = async () => {
 
     app.use(vite.middlewares);
   }
+  if (!isCombinedDevServer) {
+    app.use(express.static(path.join(__dirname, 'dist')));
 
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    });
+  }
   const port = Number(isCombinedDevServer ? (process.env.DEV_PORT ?? 5173) : (process.env.PORT ?? 3001));
   const label = isCombinedDevServer ? 'App + API server' : 'API server';
 
