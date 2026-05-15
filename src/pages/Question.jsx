@@ -1,124 +1,52 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, pendingChallenge }) {
-  const [audioBlob, setAudioBlob] = useState(null);
+  const [answerText, setAnswerText] = useState('');
   const [error, setError] = useState('');
   const [evaluation, setEvaluation] = useState(null);
   const [evaluationStage, setEvaluationStage] = useState('');
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [questionId, setQuestionId] = useState('');
-  const [recordingSeconds, setRecordingSeconds] = useState(0);
-  const mediaRecorderRef = useRef(null);
-  const chunksRef = useRef([]);
-  const timerRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => () => {
-    clearInterval(timerRef.current);
-  }, []);
-
-  const audioUrl = useMemo(() => (
-    audioBlob ? URL.createObjectURL(audioBlob) : ''
-  ), [audioBlob]);
-
-  useEffect(() => {
-    if (!audioUrl) {
-      return undefined;
-    }
-
-    return () => URL.revokeObjectURL(audioUrl);
-  }, [audioUrl]);
-
-  const formatRecordingTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const remainingSeconds = (seconds % 60).toString().padStart(2, '0');
-
-    return `${minutes}:${remainingSeconds}`;
-  };
-
-  const startRecording = async () => {
-    try {
-      setError('');
-      setEvaluation(null);
-      setEvaluationStage('');
-      setAudioBlob(null);
-      setRecordingSeconds(0);
-
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-
-      chunksRef.current = [];
-      mediaRecorderRef.current = mediaRecorder;
-
-      mediaRecorder.addEventListener('dataavailable', (event) => {
-        if (event.data.size > 0) {
-          chunksRef.current.push(event.data);
-        }
-      });
-
-      mediaRecorder.addEventListener('stop', () => {
-        const recording = new Blob(chunksRef.current, { type: 'audio/webm' });
-
-        setAudioBlob(recording);
-        stream.getTracks().forEach((track) => track.stop());
-        setEvaluationStage('Đã lưu bản ghi. Nghe lại rồi gửi khi sẵn sàng.');
-      });
-
-      mediaRecorder.start();
-      setIsRecording(true);
-      timerRef.current = setInterval(() => {
-        setRecordingSeconds((currentSeconds) => currentSeconds + 1);
-      }, 1000);
-    } catch {
-      setError('Không truy cập được micro. Hãy cấp quyền micro rồi thử lại.');
-    }
-  };
-
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    clearInterval(timerRef.current);
-    setIsRecording(false);
-  };
-
-  const toggleRecording = () => {
-    if (isRecording) {
-      stopRecording();
+  const evaluateAnswer = async () => {
+    if (hasSubmitted) {
       return;
     }
 
-    startRecording();
-  };
-
-  const evaluateAnswer = async (recording = audioBlob) => {
     if (!questionId.trim()) {
       setError('Hãy nhập mã câu hỏi đã rút trước.');
       return;
     }
 
-    if (!recording) {
-      setError('Hãy ghi âm câu trả lời trước khi chấm.');
+    if (!answerText.trim()) {
+      setError('Hãy nhập câu trả lời trước khi chấm.');
       return;
     }
 
     setError('');
+    setEvaluation(null);
+    setHasSubmitted(true);
     setIsEvaluating(true);
-    setEvaluationStage('Đang gửi bản ghi đến máy chủ AI...');
+    setEvaluationStage('Đang gửi câu trả lời để AI chấm...');
 
     try {
-      const formData = new FormData();
-      formData.append('questionId', questionId.trim());
-      formData.append('audio', recording, 'answer.webm');
-
       const response = await fetch('/api/evaluate-answer', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          questionId: questionId.trim(),
+          answer: answerText.trim(),
+        }),
       });
-      setEvaluationStage('Đang chờ AI chuyển giọng nói thành văn bản và chấm câu trả lời...');
       const data = await response.json();
 
       if (!response.ok) {
+        setHasSubmitted(false);
         throw new Error(data.error || 'Không chấm được câu trả lời.');
       }
 
@@ -162,6 +90,10 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
     incorrect: 'Sai',
     not_applicable: 'Không hợp lệ',
   };
+  const isCorrect = evaluation?.verdict.result === 'correct';
+  const resultMessage = isCorrect
+    ? 'Câu trả lời được tính là đúng.'
+    : 'Câu trả lời chưa đúng. Lượt này sẽ kết thúc.';
 
   return (
     <main className="question-page">
@@ -182,60 +114,57 @@ function Question({ activePlayer, onAddScore, onNextPlayer, onResolveChallenge, 
             min="1"
             type="number"
             value={questionId}
+            disabled={hasSubmitted}
             onChange={(event) => setQuestionId(event.target.value)}
             placeholder="Ví dụ: 7"
           />
 
-          <div className="recording-control">
-            <button
-              className={isRecording ? 'danger-button' : 'primary-button'}
-              type="button"
-              disabled={isEvaluating}
-              onClick={toggleRecording}
-            >
-              {isRecording ? 'Dừng ghi âm' : 'Ghi câu trả lời'}
-            </button>
-            <span className={isRecording ? 'recording-timer active' : 'recording-timer'}>
-              {formatRecordingTime(recordingSeconds)}
-            </span>
-          </div>
-
           <p className="ai-status" aria-live="polite">
-            {evaluationStage || 'Ghi câu trả lời, nghe lại, rồi gửi để AI chấm.'}
+            {evaluationStage || 'Mỗi người chỉ được gửi câu trả lời một lần.'}
           </p>
 
-          <div className={audioUrl ? 'recording-playback' : 'recording-playback empty'}>
-            <span>Bản ghi</span>
-            {audioUrl ? (
-              <audio controls src={audioUrl}>
-                <track kind="captions" />
-              </audio>
-            ) : (
-              <div className="empty-recording">Chưa có bản ghi</div>
-            )}
-          </div>
+          <label htmlFor="answer-text">Câu trả lời</label>
+          <textarea
+            id="answer-text"
+            value={answerText}
+            disabled={hasSubmitted}
+            onChange={(event) => setAnswerText(event.target.value)}
+            placeholder="Nhập câu trả lời của người chơi tại đây."
+            rows={6}
+          />
 
           <button
             className="primary-button"
             type="button"
-            disabled={isRecording || isEvaluating || !audioBlob}
-            onClick={() => evaluateAnswer()}
+            disabled={hasSubmitted || isEvaluating || !answerText.trim()}
+            onClick={evaluateAnswer}
           >
-            {isEvaluating ? 'Đang gửi...' : 'Gửi câu trả lời'}
+            {isEvaluating ? 'Đang chấm...' : 'Gửi câu trả lời'}
           </button>
         </div>
 
         {error && <p className="form-error">{error}</p>}
+      </section>
 
-        {evaluation && (
-          <section className="ai-result" aria-live="polite">
-            <h2>{verdictLabels[evaluation.verdict.result] ?? evaluation.verdict.result}</h2>
+      {evaluation && (
+        <div className="modal-backdrop" role="presentation">
+          <section
+            aria-labelledby="answer-result-title"
+            aria-modal="true"
+            className={isCorrect ? 'confirm-modal answer-result-modal success' : 'confirm-modal answer-result-modal blocked'}
+            role="dialog"
+          >
+            <p className="eyebrow">Kết quả</p>
+            <h2 id="answer-result-title">
+              {verdictLabels[evaluation.verdict.result] ?? evaluation.verdict.result}
+            </h2>
+            <p>{resultMessage}</p>
             <button className="primary-button" type="button" onClick={applyAiResult}>
-              Áp dụng kết quả
+              Đã hiểu
             </button>
           </section>
-        )}
-      </section>
+        </div>
+      )}
     </main>
   );
 }
