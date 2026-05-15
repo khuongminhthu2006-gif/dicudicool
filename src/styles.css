@@ -26,6 +26,14 @@ body {
   min-height: 100vh;
 }
 
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell.large-text {
+  font-size: 1.08rem;
+}
+
 body::before {
   position: fixed;
   inset: 0;
@@ -124,7 +132,7 @@ code {
 
 .home-menu {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(10px, 2vw, 18px);
   margin-top: 0;
 }
@@ -344,9 +352,25 @@ code {
   line-height: 1;
 }
 
+.compact-scoreboard .score-row {
+  min-height: 54px;
+  padding: 7px;
+}
+
+.compact-scoreboard .score-avatar {
+  width: 38px;
+  height: 38px;
+}
+
+.compact-scoreboard .score-character {
+  display: none;
+}
+
 .lobby-page,
 .dice-page,
-.card-effect-page {
+.card-effect-page,
+.settings-page,
+.summary-page {
   min-height: 100vh;
   display: grid;
   place-items: center;
@@ -373,7 +397,9 @@ code {
 
 .lobby-panel,
 .dice-panel,
-.card-effect-panel {
+.card-effect-panel,
+.settings-panel,
+.summary-panel {
   width: min(100%, 450px);
   padding: clamp(16px, 2.4vw, 24px);
   border: 1px solid #d7dde6;
@@ -387,6 +413,92 @@ code {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+}
+
+.settings-panel,
+.summary-panel {
+  width: min(100%, 760px);
+}
+
+.settings-header,
+.summary-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.settings-header h1,
+.summary-header h1 {
+  font-size: clamp(1.55rem, 4vw, 2.4rem);
+  line-height: 1.08;
+}
+
+.summary-script {
+  display: grid;
+  gap: 16px;
+  margin-top: 22px;
+  padding: clamp(14px, 2vw, 20px);
+  border: 1px solid #d7dde6;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.summary-script p {
+  margin: 0;
+  color: #1f2937;
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  line-height: 1.75;
+}
+
+.settings-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.setting-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  border: 1px solid #d7dde6;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.setting-row strong {
+  display: block;
+  color: #111827;
+  font-size: 1rem;
+}
+
+.setting-row small {
+  display: block;
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.setting-row input {
+  width: 22px;
+  height: 22px;
+  accent-color: #005bcc;
+}
+
+.settings-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.settings-actions .secondary-button,
+.settings-actions .danger-button {
+  width: 100%;
+  margin: 0;
 }
 
 .lobby-panel {
@@ -1062,7 +1174,9 @@ code {
   .home-panel,
   .lobby-panel,
   .dice-panel,
-  .question-panel {
+  .question-panel,
+  .settings-panel,
+  .summary-panel {
     padding: 14px;
   }
 
@@ -1095,7 +1209,9 @@ code {
   .lobby-page,
   .dice-page,
   .question-page,
-  .card-effect-page {
+  .card-effect-page,
+  .settings-page,
+  .summary-page {
     min-height: 100vh;
     height: auto;
     align-items: start;
@@ -1164,7 +1280,8 @@ code {
   .player-setup-grid,
   .answer-workflow,
   .question-actions,
-  .modal-actions {
+  .modal-actions,
+  .settings-actions {
     grid-template-columns: 1fr;
   }
 

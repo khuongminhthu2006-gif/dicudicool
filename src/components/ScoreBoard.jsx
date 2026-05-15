@@ -1,11 +1,15 @@
 import { getCharacterOption } from '../characterImages';
 
-function ScoreBoard({ activePlayerId, players }) {
+function ScoreBoard({ activePlayerId, hideEliminatedPlayers = false, players }) {
+  const visiblePlayers = hideEliminatedPlayers
+    ? players.filter((player) => !player.isEliminated)
+    : players;
+
   return (
     <aside className="scoreboard" aria-label="Bảng điểm">
       <h2>Bảng điểm</h2>
       <div className="scoreboard-list">
-        {players.map((player) => {
+        {visiblePlayers.map((player) => {
           const character = getCharacterOption(player.character, player.id);
           const statusLabels = [
             player.isEliminated ? 'Dừng cuộc chơi' : '',
