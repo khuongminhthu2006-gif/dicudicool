@@ -6,6 +6,7 @@ import CardEffect from './pages/CardEffect';
 import Dice from './pages/Dice';
 import Home from './pages/Home';
 import Lobby from './pages/Lobby';
+import Practice from './pages/Practice';
 import Question from './pages/Question';
 import Settings from './pages/Settings';
 import Summary from './pages/Summary';
@@ -23,7 +24,7 @@ const createPlayer = (id, usedCharacterValues = new Set()) => ({
   id,
   name: `Người chơi ${id}`,
   character: getFirstAvailableCharacterValue(usedCharacterValues),
-  score: 0,
+  score: 20,
   shields: 0,
   skipTurns: 0,
   isEliminated: false,
@@ -378,6 +379,10 @@ function App() {
               players={players}
             />
           )}
+        />
+        <Route
+          path="/practice"
+          element={<Practice />}
         />
         <Route
           path="/dice"
