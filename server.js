@@ -8,7 +8,8 @@ import { fileURLToPath } from 'url';
 
 const app = express();
 const isCombinedDevServer = process.argv.includes('--with-vite');
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const verdictSchema = {
   name: 'answer_verdict',
   strict: true,
