@@ -17,13 +17,13 @@
 body {
   margin: 0;
   min-width: 320px;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #root {
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 body::before {
@@ -217,13 +217,12 @@ code {
   --game-gap: clamp(12px, 1.6vw, 18px);
   --sidebar-width: clamp(180px, 18vw, 232px);
 
-  height: 100vh;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   gap: var(--game-gap);
   padding: clamp(10px, 1.6vw, 22px);
   background: url("../img/background.jpg") center / 100% 100% fixed no-repeat;
-  overflow: hidden;
 }
 
 .game-sidebar {
@@ -1080,7 +1079,7 @@ code {
 
   .game-layout {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 31vh) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
     gap: 8px;
     padding: 8px;
   }
@@ -1095,8 +1094,18 @@ code {
 
   .game-sidebar {
     position: static;
-    height: 31vh;
+    height: auto;
     min-height: 0;
+  }
+
+  .lobby-page,
+  .dice-page,
+  .question-page,
+  .card-effect-page {
+    min-height: 100vh;
+    height: auto;
+    align-items: start;
+    overflow: visible;
   }
 
   .scoreboard {
@@ -1195,12 +1204,15 @@ code {
   .game-content .dice-page,
   .game-content .question-page,
   .game-content .card-effect-page {
-    height: calc(69vh - 24px);
+    height: auto;
+    min-height: 0;
   }
 
+  .lobby-panel,
+  .dice-panel,
   .question-panel,
   .card-effect-panel {
-    max-height: calc(69vh - 24px);
+    max-height: none;
   }
 
   .answer-workflow,
