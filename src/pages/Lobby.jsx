@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { characterOptions, getCharacterOption } from '../characterImages';
 
 const maxPlayers = 4;
 const playerSlots = [1, 2, 3, 4];
@@ -9,6 +10,12 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
   const handleStartGame = () => {
     navigate('/dice');
   };
+
+  const getUsedCharacterValues = (currentPlayerId) => new Set(
+    players
+      .filter((player) => player.id !== currentPlayerId)
+      .map((player) => getCharacterOption(player.character, player.id).value),
+  );
 
   return (
     <main className="lobby-page">
@@ -57,8 +64,14 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
               );
             }
 
+            const selectedCharacter = getCharacterOption(player.character, player.id);
+            const usedCharacterValues = getUsedCharacterValues(player.id);
+
             return (
               <div className="player-setup" key={player.id}>
+                <div className="player-character-preview">
+                  <img src={selectedCharacter.image} alt={selectedCharacter.label} />
+                </div>
                 <h2>Người chơi {player.id}</h2>
                 <input
                   type="text"
@@ -69,13 +82,18 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
                 <label htmlFor={`character-${player.id}`}>Chọn nhân vật:</label>
                 <select
                   id={`character-${player.id}`}
-                  value={player.character}
+                  value={selectedCharacter.value}
                   onChange={(event) => onUpdatePlayer(player.id, { character: event.target.value })}
                 >
-                  <option value="Nhân vật 1">Nhân vật 1</option>
-                  <option value="Nhân vật 2">Nhân vật 2</option>
-                  <option value="Nhân vật 3">Nhân vật 3</option>
-                  <option value="Nhân vật 4">Nhân vật 4</option>
+                  {characterOptions.map((option) => (
+                    <option
+                      disabled={usedCharacterValues.has(option.value)}
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             );
@@ -90,6 +108,6 @@ function Lobby({ onAddPlayer, onRemovePlayer, onUpdatePlayer, players }) {
       </section>
     </main>
   );
-};
+}
 
 export default Lobby;

@@ -17,7 +17,13 @@
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
 }
 
 body::before {
@@ -69,18 +75,19 @@ code {
 }
 
 .home-page {
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
   place-items: center;
-  padding: clamp(14px, 2vw, 28px);
+  padding: clamp(10px, 1.6vw, 22px);
   background: url("../img/homewithmascot.jpg") center / 100% 100% no-repeat;
+  overflow: hidden;
 }
 
 .home-panel {
   width: min(100%, 1120px);
-  min-height: min(760px, calc(100vh - 28px));
+  height: calc(100vh - clamp(20px, 3.2vw, 44px));
   display: grid;
-  grid-template-rows: minmax(280px, 1fr) auto auto;
+  grid-template-rows: minmax(190px, 1fr) auto auto;
   align-items: end;
   padding: clamp(22px, 4vw, 56px) clamp(18px, 5vw, 96px);
   border: 0;
@@ -102,7 +109,7 @@ code {
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-  margin: 0 0 34px;
+  margin: 0 0 clamp(16px, 3vh, 28px);
 }
 
 .home-actions .secondary-button {
@@ -124,7 +131,7 @@ code {
 }
 
 .home-menu button {
-  min-height: 118px;
+  min-height: clamp(78px, 12vh, 108px);
   display: grid;
   place-items: center;
   gap: 8px;
@@ -210,18 +217,19 @@ code {
   --game-gap: clamp(12px, 1.6vw, 18px);
   --sidebar-width: clamp(180px, 18vw, 232px);
 
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   gap: var(--game-gap);
-  padding: clamp(14px, 2vw, 28px);
+  padding: clamp(10px, 1.6vw, 22px);
   background: url("../img/background.jpg") center / 100% 100% fixed no-repeat;
+  overflow: hidden;
 }
 
 .game-sidebar {
   position: sticky;
   top: clamp(14px, 2vw, 28px);
-  height: calc(100vh - clamp(28px, 4vw, 56px));
+  height: calc(100vh - clamp(20px, 3.2vw, 44px));
   display: flex;
   flex-direction: column;
   border: 2px solid #e6d4bd;
@@ -233,6 +241,7 @@ code {
 
 .game-content {
   min-width: 0;
+  min-height: 0;
   display: grid;
   align-items: center;
   justify-items: center;
@@ -240,9 +249,10 @@ code {
 
 .scoreboard {
   flex: 1;
+  min-height: 0;
   padding: 0 10px 14px;
   background: transparent;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .scoreboard h2 {
@@ -262,7 +272,7 @@ code {
 
 .score-row {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) auto;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
   gap: 3px 8px;
   width: 100%;
   min-height: 68px;
@@ -279,19 +289,37 @@ code {
   background: #fff4ce;
 }
 
-.score-row::before {
+.score-row.eliminated {
+  border-color: #fb7185;
+  background: #fff1f2;
+  opacity: 0.72;
+}
+
+.score-row.eliminated.active {
+  border-color: #e11d48;
+  background: #ffe4e6;
+}
+
+.score-row.eliminated .score-avatar {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.score-row.eliminated .score-character,
+.score-row.eliminated .score-name,
+.score-row.eliminated strong {
+  color: #be123c;
+}
+
+.score-avatar {
   grid-column: 1;
   grid-row: 1 / span 2;
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
+  width: 46px;
+  height: 46px;
+  align-self: center;
+  border-radius: 12px;
   background: #e9f2ff;
-  color: #005bcc;
-  font-size: 1.35rem;
-  font-weight: 900;
-  content: attr(data-avatar);
+  object-fit: contain;
 }
 
 .score-character {
@@ -319,19 +347,23 @@ code {
 }
 
 .lobby-page,
-.dice-page {
-  min-height: 100vh;
+.dice-page,
+.card-effect-page {
+  height: 100vh;
   display: grid;
   place-items: center;
   width: 100%;
-  padding: clamp(24px, 4vw, 56px);
+  padding: clamp(12px, 2vw, 28px);
   background: transparent;
+  overflow: hidden;
 }
 
 .game-content .dice-page,
-.game-content .question-page {
+.game-content .question-page,
+.game-content .card-effect-page {
   width: 100%;
-  min-height: calc(100vh - clamp(28px, 4vw, 56px));
+  height: calc(100vh - clamp(20px, 3.2vw, 44px));
+  min-height: 0;
   padding: 0;
 }
 
@@ -344,9 +376,11 @@ code {
 }
 
 .lobby-panel,
-.dice-panel {
+.dice-panel,
+.card-effect-panel {
   width: min(100%, 450px);
-  padding: 24px;
+  max-height: calc(100vh - clamp(24px, 4vw, 56px));
+  padding: clamp(16px, 2.4vw, 24px);
   border: 1px solid #d7dde6;
   border-radius: 24px;
   background: rgba(255, 250, 242, 0.95);
@@ -364,8 +398,29 @@ code {
   width: min(100%, 1040px);
 }
 
+.lobby-header h1,
+.question-panel h1 {
+  font-size: clamp(1.55rem, 4vw, 2.4rem);
+  line-height: 1.08;
+}
+
 .dice-header h1 {
-  font-size: clamp(1.85rem, 6vw, 3rem);
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+}
+
+.dice-header {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.active-player-avatar {
+  width: clamp(64px, 11vh, 82px);
+  height: clamp(64px, 11vh, 82px);
+  border-radius: 16px;
+  background: #e9f2ff;
+  object-fit: contain;
 }
 
 .active-player-label {
@@ -387,7 +442,7 @@ code {
   grid-template-columns: 48px 1fr 48px;
   align-items: center;
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 16px;
 }
 
 .player-count-controls span {
@@ -407,17 +462,17 @@ code {
 
 .player-setup-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin: 28px 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
 }
 
 .player-setup {
   display: grid;
-  grid-template-rows: auto 42px auto 42px;
-  gap: 10px;
-  min-height: 178px;
-  padding: 16px;
+  grid-template-rows: clamp(82px, 15vh, 110px) auto 40px auto 40px;
+  gap: 8px;
+  min-height: 0;
+  padding: 12px;
   border: 1px solid #d7dde6;
   border-radius: 8px;
   background: #ffffff;
@@ -448,6 +503,21 @@ code {
   color: #94a3b8;
   font-size: 0.95rem;
   font-weight: 700;
+}
+
+.player-character-preview {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  border-radius: 8px;
+  background: #edf7ff;
+  overflow: hidden;
+}
+
+.player-character-preview img {
+  width: 100%;
+  height: clamp(78px, 14vh, 104px);
+  object-fit: contain;
 }
 
 .player-setup label {
@@ -481,12 +551,33 @@ code {
   align-items: center;
   gap: 20px;
   justify-content: center;
-  margin: 22px 0;
+  margin: clamp(12px, 2vh, 18px) 0;
+}
+
+.skip-turn-panel {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background: #fff1f2;
+}
+
+.skip-turn-panel h2 {
+  margin: 0;
+  color: #be123c;
+  font-size: 1.35rem;
+}
+
+.skip-turn-panel p {
+  margin: 0;
+  color: #7f1d1d;
 }
 
 .die {
   position: relative;
-  width: 118px;
+  width: clamp(88px, 17vh, 112px);
   aspect-ratio: 1;
   border: 3px solid #111827;
   border-radius: 8px;
@@ -496,7 +587,7 @@ code {
 
 .pip {
   position: absolute;
-  width: 22px;
+  width: clamp(16px, 3vh, 21px);
   aspect-ratio: 1;
   border-radius: 999px;
   background: #111827;
@@ -549,13 +640,13 @@ code {
 .dice-result strong {
   display: block;
   color: #111827;
-  font-size: 3.4rem;
+  font-size: clamp(2.5rem, 8vh, 3.2rem);
   line-height: 1;
 }
 
 .primary-button {
   width: 100%;
-  min-height: 64px;
+  min-height: clamp(48px, 7vh, 60px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -578,8 +669,8 @@ code {
 
 .secondary-button {
   width: 100%;
-  min-height: 52px;
-  margin-top: 16px;
+  min-height: clamp(44px, 6vh, 50px);
+  margin-top: 12px;
   border: 2px solid #ead9c7;
   border-radius: 16px;
   background: #fffaf2;
@@ -611,7 +702,7 @@ code {
 .sidebar-actions {
   display: grid;
   gap: 10px;
-  padding: 0 24px 24px;
+  padding: 0 18px 18px;
 }
 
 .sidebar-actions .secondary-button,
@@ -671,6 +762,24 @@ code {
   margin-top: 12px;
 }
 
+.answer-result-modal {
+  text-align: center;
+}
+
+.answer-result-modal.success {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.answer-result-modal.blocked {
+  border-color: #fecaca;
+  background: #fff1f2;
+}
+
+.answer-result-modal .primary-button {
+  margin-top: 20px;
+}
+
 .end-game-result {
   padding: 12px;
   border-radius: 8px;
@@ -707,20 +816,26 @@ code {
 }
 
 .question-page {
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
   place-items: center;
-  padding: clamp(24px, 4vw, 56px);
+  padding: clamp(12px, 2vw, 28px);
   background: transparent;
+  overflow: hidden;
 }
 
 .question-panel {
   width: min(100%, 860px);
-  padding: 40px;
+  max-height: calc(100vh - clamp(24px, 4vw, 56px));
+  padding: clamp(18px, 2.6vw, 30px);
   border: 1px solid #d7dde6;
   border-radius: 24px;
   background: rgba(255, 250, 242, 0.95);
   box-shadow: 0 8px 0 #dcc5aa, 0 20px 44px rgba(80, 45, 15, 0.16);
+}
+
+.card-effect-panel {
+  width: min(100%, 760px);
 }
 
 .question-placeholder {
@@ -731,8 +846,8 @@ code {
 }
 
 .challenge-penalty {
-  margin-top: 16px;
-  padding: 12px;
+  margin-top: 10px;
+  padding: 10px;
   border: 1px solid #fecaca;
   border-radius: 8px;
   background: #fff1f2;
@@ -744,96 +859,100 @@ code {
   color: #be123c;
 }
 
-.answer-workflow {
+.answer-workflow,
+.card-effect-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
-  margin-top: 28px;
+  gap: 10px;
+  margin-top: 16px;
 }
 
-.answer-workflow label {
+.answer-workflow label,
+.card-effect-form label {
   color: #4b5563;
   font-size: 0.9rem;
   font-weight: 700;
 }
 
-.answer-workflow input {
+.answer-workflow input,
+.answer-workflow textarea,
+.card-effect-form select,
+.card-effect-form input {
   width: 100%;
-  min-height: 44px;
   padding: 8px 10px;
   border: 1px solid #d7dde6;
   border-radius: 8px;
+  background: #ffffff;
   color: #111827;
+}
+
+.answer-workflow input,
+.card-effect-form input,
+.card-effect-form select {
+  min-height: 40px;
+}
+
+.answer-workflow textarea {
+  min-height: clamp(72px, 13vh, 104px);
+  resize: vertical;
 }
 
 .answer-workflow > label,
 .answer-workflow > input,
+.answer-workflow > textarea,
 .ai-status,
-.recording-playback,
-.answer-workflow > .primary-button {
+.answer-workflow > .primary-button,
+.card-effect-form > label,
+.card-effect-form > input,
+.card-effect-form > select,
+.card-effect-form > .checkbox-field,
+.selected-card-preview,
+.effect-preview,
+.card-effect-form > .primary-button {
   grid-column: 1 / -1;
 }
 
-.recording-control {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-}
-
-.recording-control .danger-button {
-  width: 100%;
-}
-
-.recording-timer {
-  min-width: 68px;
-  padding: 10px 12px;
+.selected-card-preview {
+  padding: 12px;
   border: 1px solid #d7dde6;
   border-radius: 8px;
   background: #ffffff;
-  color: #4b5563;
-  font-weight: 800;
-  text-align: center;
 }
 
-.recording-timer.active {
-  border-color: #fecaca;
-  background: #fff1f2;
-  color: #be123c;
+.selected-card-preview h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.05rem;
 }
 
-.recording-playback {
-  display: grid;
-  grid-template-columns: 150px minmax(0, 1fr);
+.selected-card-preview p {
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+.checkbox-field {
+  display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   padding: 10px 12px;
-  border: 1px solid #d7dde6;
+  border: 1px solid #bbf7d0;
   border-radius: 8px;
-  background: #f8fafc;
+  background: #f0fdf4;
+  color: #166534;
 }
 
-.recording-playback span {
-  color: #4b5563;
-  font-size: 0.9rem;
-  font-weight: 700;
+.checkbox-field input {
+  width: 18px;
+  min-height: 18px;
 }
 
-.recording-playback audio {
-  width: 100%;
-  height: 40px;
-}
-
-.empty-recording {
-  min-height: 40px;
-  display: grid;
-  align-items: center;
-  padding: 0 12px;
+.effect-preview {
+  margin: 0;
+  padding: 10px 12px;
   border-radius: 8px;
   background: #edf2f7;
-  color: #64748b;
+  color: #1f2937;
   font-size: 0.95rem;
-  font-weight: 700;
 }
 
 .primary-button:disabled {
@@ -842,36 +961,13 @@ code {
 }
 
 .form-error {
-  margin-top: 16px;
-  padding: 12px;
+  margin-top: 10px;
+  padding: 10px;
   border: 1px solid #fecaca;
   border-radius: 8px;
   background: #fff1f2;
   color: #be123c;
   font-size: 0.95rem;
-}
-
-.ai-result {
-  margin-top: 24px;
-  padding: 18px;
-  border: 1px solid #d7dde6;
-  border-radius: 8px;
-  background: #ffffff;
-}
-
-.ai-result h2 {
-  margin: 0 0 12px;
-  color: #111827;
-  font-size: 1.25rem;
-}
-
-.ai-result p {
-  margin-top: 10px;
-  font-size: 0.95rem;
-}
-
-.ai-result .primary-button {
-  margin-top: 18px;
 }
 
 .question-actions {
@@ -887,7 +983,7 @@ code {
 }
 
 .dice-options {
-  margin-top: 28px;
+  margin-top: clamp(14px, 2.4vh, 22px);
 }
 
 .dice-options h2 {
@@ -903,8 +999,8 @@ code {
 }
 
 .option-button {
-  min-height: 56px;
-  padding: 10px 12px;
+  min-height: clamp(44px, 7vh, 54px);
+  padding: 8px 10px;
   border: 1px solid #d7dde6;
   border-radius: 8px;
   background: #ffffff;
@@ -974,7 +1070,7 @@ code {
   .lobby-panel,
   .dice-panel,
   .question-panel {
-    padding: 24px;
+    padding: 14px;
   }
 
   .home-actions,
@@ -984,8 +1080,9 @@ code {
 
   .game-layout {
     grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 14px;
+    grid-template-rows: minmax(0, 31vh) minmax(0, 1fr);
+    gap: 8px;
+    padding: 8px;
   }
 
   .game-content .dice-page .dice-panel {
@@ -998,7 +1095,53 @@ code {
 
   .game-sidebar {
     position: static;
-    height: auto;
+    height: 31vh;
+    min-height: 0;
+  }
+
+  .scoreboard {
+    padding: 0 8px 8px;
+  }
+
+  .scoreboard h2 {
+    margin: 0 -8px 8px;
+    padding: 8px;
+    font-size: 0.95rem;
+  }
+
+  .scoreboard-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .score-row {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    min-height: 48px;
+    padding: 6px;
+  }
+
+  .score-avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .score-character {
+    display: none;
+  }
+
+  .score-name {
+    align-self: center;
+    font-size: 0.78rem;
+  }
+
+  .score-row strong {
+    font-size: 1.15rem;
+  }
+
+  .sidebar-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0 8px 8px;
   }
 
   .lobby-header {
@@ -1008,6 +1151,7 @@ code {
   .dice-result {
     align-items: flex-start;
     flex-direction: column;
+    gap: 10px;
   }
 
   .option-grid {
@@ -1017,18 +1161,56 @@ code {
   .player-setup-grid,
   .answer-workflow,
   .question-actions,
-  .recording-control,
-  .recording-playback,
   .modal-actions {
     grid-template-columns: 1fr;
   }
 
   .home-panel {
-    min-height: calc(100vh - 28px);
-    grid-template-rows: minmax(180px, 1fr) auto auto;
+    height: calc(100vh - 20px);
+    grid-template-rows: minmax(120px, 1fr) auto auto;
   }
 
   .home-menu button {
-    min-height: 78px;
+    min-height: 56px;
+  }
+
+  .menu-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .player-setup-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .player-setup {
+    grid-template-rows: 52px auto 34px auto 34px;
+    padding: 8px;
+  }
+
+  .player-character-preview img {
+    height: 48px;
+  }
+
+  .game-content .dice-page,
+  .game-content .question-page,
+  .game-content .card-effect-page {
+    height: calc(69vh - 24px);
+  }
+
+  .question-panel,
+  .card-effect-panel {
+    max-height: calc(69vh - 24px);
+  }
+
+  .answer-workflow,
+  .card-effect-form {
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .answer-workflow textarea,
+  .card-effect-form textarea {
+    min-height: 52px;
   }
 }
