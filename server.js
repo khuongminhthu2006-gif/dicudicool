@@ -139,8 +139,8 @@ const startServer = async () => {
   const port = Number(isCombinedDevServer ? (process.env.DEV_PORT ?? 5173) : (process.env.PORT ?? 3001));
   const label = isCombinedDevServer ? 'App + API server' : 'API server';
 
-  app.listen(port, '127.0.0.1', () => {
-    console.log(`${label} running at http://127.0.0.1:${port}`);
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`${label} running at http://0.0.0.0:${port}`);
     console.log(`OPENAI_API_KEY loaded: ${process.env.OPENAI_API_KEY ? 'yes' : 'no'}`);
   });
 };

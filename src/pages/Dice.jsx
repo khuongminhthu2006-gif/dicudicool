@@ -136,7 +136,7 @@ function Dice({ activePlayer, onChallengeRequired, onNextPlayer, onPassRestricte
               disabled={!canGoNext}
               onClick={resetTurnAndGoNext}
             >
-              Người chơi tiếp theo
+              Tiếp
             </button>
           </>
         )}
